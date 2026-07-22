@@ -1179,9 +1179,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameContextInstaller
   _snakeInstaller:
-    _inputButtonSystem: {fileID: 11400000, guid: e9b83ad405331f946ba49d646529d547, type: 2}
-    _snakePrefab: {fileID: 1446817787}
-    _snakeDir: 1
+    inputSystem: {fileID: 11400000, guid: 2a939a0117c4705489879b043245949e, type: 2}
+    _snake: {fileID: 1446817787}
   coinInstaller:
     coinPrefab: {fileID: 1221131666036007499, guid: f37c023e6b8b06149a4215320dd7e482, type: 3}
     snake: {fileID: 1446817787}
@@ -1189,7 +1188,6 @@ MonoBehaviour:
   uiInstaller:
     _gameUI: {fileID: 1764093826}
     _maxDifficulty: 9
-    _worldBounds: {fileID: 1431199845}
 --- !u!1 &1587245287
 GameObject:
   m_ObjectHideFlags: 0

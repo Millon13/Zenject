@@ -1,16 +1,13 @@
-using Modules;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 public sealed class GameContextInstaller : MonoInstaller
 {
     [SerializeField] private SnakeMovementInstaller _snakeInstaller;
-    
+
     [SerializeField] private CoinInstaller coinInstaller;
 
     [SerializeField] private UIInstaller uiInstaller;
-
 
     public override void InstallBindings()
     {

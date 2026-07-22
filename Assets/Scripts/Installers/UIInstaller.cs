@@ -2,16 +2,16 @@
 using UnityEngine;
 using System;
 using Modules;
+using UI;
 using Zenject;
 
 [Serializable]
 public sealed class UIInstaller : Installer
 {
     [SerializeField] private GameUI _gameUI;
-    
+
     [SerializeField] private int _maxDifficulty = 9;
-    
-    [SerializeField] private WorldBounds _worldBounds;
+
 
     public override void InstallBindings()
     {
@@ -19,8 +19,8 @@ public sealed class UIInstaller : Installer
         Container.Bind<IScore>().To<Score>().AsSingle();
         Container.Bind<IDifficulty>().To<Difficulty>().AsSingle()
             .WithArguments(_maxDifficulty);
-        Container.BindInterfacesTo<UIController>().AsCached().WithArguments(_worldBounds).NonLazy();
-
-        Container.Bind<ITickable>().To<UIController>().AsCached().WithArguments(_worldBounds).NonLazy();
+        Container.BindInterfacesTo<UIController>().AsCached().NonLazy();
+        Container.Bind<GameCycle>().AsCached().NonLazy();
+        Container.Bind<ITickable>().To<UIController>().AsCached().NonLazy();
     }
 }
