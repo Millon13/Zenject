@@ -9,10 +9,9 @@ public class CoinSpawner : IDisposable
     private readonly CoinController.Factory _coinFactory;
 
     private readonly IWorldBounds _worldBounds;
-
+    
     private readonly List<Coin> _spawnedCoins;
 
-    public event Action OnCoinSpawned;
 
     public CoinSpawner(CoinController.Factory coinFactory, IWorldBounds worldBounds)
     {
@@ -37,7 +36,6 @@ public class CoinSpawner : IDisposable
         newCoin.Position = positionInt;
         newCoin.Generate();
         _spawnedCoins.Add(newCoin);
-        OnCoinSpawned?.Invoke();
         return newCoin;
     }
 

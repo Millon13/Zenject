@@ -6,11 +6,14 @@ using UnityEngine;
 public class CoinCollector
 {
     private readonly Snake _snake;
+
     private readonly IScore _score;
+
     private readonly IDifficulty _difficulty;
+
     private readonly ILevelProgress _levelProgress;
+
     private readonly CoinSpawner _coinSpawner;
-    private readonly Action _onCoinCollected;
 
     public CoinCollector(Snake snake, IScore score, IDifficulty difficulty, [CanBeNull] ILevelProgress levelProgress,
         CoinSpawner coinSpawner)
@@ -45,7 +48,6 @@ public class CoinCollector
         }
 
         _coinSpawner.RemoveCoin(coin);
-        _onCoinCollected?.Invoke();
     }
 
     private void OnLevelComplete()
