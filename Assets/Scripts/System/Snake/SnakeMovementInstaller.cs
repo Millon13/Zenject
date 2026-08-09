@@ -1,7 +1,5 @@
 using System;
 using Modules;
-using SnakeGame;
-using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
@@ -17,10 +15,10 @@ public sealed class SnakeMovementInstaller : Installer
 
     public override void InstallBindings()
     {
+        this.Container.Bind<ISnake>().To<Snake>().FromInstance(_snake);
         this.Container.Bind<InputSystem>().FromInstance(inputSystem).AsSingle();
-        this.Container.Bind<ITickable>().To<SnakeController>().AsCached();
+        this.Container.BindInterfacesTo<SnakeController>().AsCached();
         this.Container.Bind<Snake>().FromInstance(_snake).AsCached();
-        this.Container.Bind<ITickable>().To<GameLoseController>().AsCached();
-        this.Container.Bind<ITickable>().To<GameWinController>().AsCached();
+        
     }
 }

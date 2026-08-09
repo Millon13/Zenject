@@ -1,11 +1,12 @@
 using UnityEngine;
 using System;
 using Modules;
+using Zenject;
 
 
 [CreateAssetMenu(fileName = "NewInputDictionary", menuName = "Input/Input Dictionary")]
 [System.Serializable]
-public class InputSystem : ScriptableObject
+public class InputSystem : ScriptableObject, ITickable
 {
     public event Action<SnakeDirection> OnTurn;
 
@@ -46,24 +47,16 @@ public class InputSystem : ScriptableObject
         }
 
 
-        if (newDirection != SnakeDirection.NONE && IsValidTurn(newDirection))
+        if (newDirection != SnakeDirection.NONE )
         {
             OnTurn.Invoke(newDirection);
             _currentDirection = newDirection;
         }
     }
-
-    private bool IsValidTurn(SnakeDirection newDirection)
+    public void Tick()
     {
-        if (_currentDirection == SnakeDirection.UP && newDirection == SnakeDirection.DOWN)
-            return false;
-        if (_currentDirection == SnakeDirection.DOWN && newDirection == SnakeDirection.UP)
-            return false;
-        if (_currentDirection == SnakeDirection.LEFT && newDirection == SnakeDirection.RIGHT)
-            return false;
-        if (_currentDirection == SnakeDirection.RIGHT && newDirection == SnakeDirection.LEFT)
-            return false;
-
-        return true;
+        MoveKeyBoardProvider();
     }
+
+   
 }

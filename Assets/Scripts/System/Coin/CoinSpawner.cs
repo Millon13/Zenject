@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Coin;
 using Modules;
 using UnityEngine;
 using SnakeGame;
@@ -6,14 +7,14 @@ using System.Collections.Generic;
 
 public class CoinSpawner : IDisposable
 {
-    private readonly CoinController.Factory _coinFactory;
+    private readonly CoinFactory _coinFactory;
 
     private readonly IWorldBounds _worldBounds;
     
     private readonly List<Coin> _spawnedCoins;
 
 
-    public CoinSpawner(CoinController.Factory coinFactory, IWorldBounds worldBounds)
+    public CoinSpawner(CoinFactory coinFactory, IWorldBounds worldBounds)
     {
         _coinFactory = coinFactory;
         _worldBounds = worldBounds;

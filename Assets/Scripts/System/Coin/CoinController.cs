@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Modules;
 using System;
+using System.Coin;
 using SnakeGame;
 
 public class CoinController : ITickable
@@ -14,7 +15,7 @@ public class CoinController : ITickable
 
     private readonly Snake _snake;
 
-    private Factory _coinFactory;
+    private CoinFactory _coinFactory;
 
     private List<Coin> _spawnedCoins = new List<Coin>();
 
@@ -55,7 +56,5 @@ public class CoinController : ITickable
         _coinSpawner.SpawnCoin();
     }
 
-    public sealed class Factory : PlaceholderFactory<Coin>
-    {
-    }
+    
 }

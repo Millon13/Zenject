@@ -1183,11 +1183,11 @@ MonoBehaviour:
     _snake: {fileID: 1446817787}
   coinInstaller:
     coinPrefab: {fileID: 1221131666036007499, guid: f37c023e6b8b06149a4215320dd7e482, type: 3}
-    snake: {fileID: 1446817787}
-    _worldBounds: {fileID: 1431199845}
   uiInstaller:
     _gameUI: {fileID: 1764093826}
+  levelInstaller:
     _maxDifficulty: 9
+    _worldBounds: {fileID: 1431199845}
 --- !u!1 &1587245287
 GameObject:
   m_ObjectHideFlags: 0

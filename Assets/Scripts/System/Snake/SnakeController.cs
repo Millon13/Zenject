@@ -3,7 +3,7 @@ using Zenject;
 using System;
 using Modules;
 
-public class SnakeController : IDisposable, ITickable
+public class SnakeController : IDisposable
 {
     private readonly Snake _snake;
 
@@ -17,11 +17,6 @@ public class SnakeController : IDisposable, ITickable
         _inputSystem.OnTurn += _snake.Turn;
     }
 
-
-    public void Tick()
-    {
-        _inputSystem.MoveKeyBoardProvider();
-    }
 
 
     public void Dispose()

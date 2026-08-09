@@ -1,9 +1,9 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 using Modules;
 using SnakeGame;
-using UI;
 
-public class UIController : ITickable
+public class UIController : ITickable,IDisposable
 {
     private readonly IGameUI _gameUI;
 
@@ -37,7 +37,7 @@ public class UIController : ITickable
         _gameUI.GameOver(true);
     }
 
-    private void OnDispose()
+    public void Dispose()
     {
         _gameCycle.OnLose -= this.OnLose;
         _gameCycle.OnWin -= this.OnWin;
