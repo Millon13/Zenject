@@ -13,8 +13,11 @@ public class CoinInstaller : Installer
     {
         
         this.Container.BindFactory<Coin, CoinFactory>().FromComponentInNewPrefab(coinPrefab).AsCached();
-        this.Container.Bind<CoinSpawner>().AsCached();
-        this.Container.Bind<CoinCollector>().AsCached();
-        this.Container.BindInterfacesTo<CoinController>().AsCached().NonLazy();
+        this.Container.Bind<CoinManager>().AsCached();
+        //this.Container.Bind<CoinCollector>().AsCached();
+        this.Container.BindInterfacesTo<CoinCollectController>().AsCached().NonLazy();
+        this.Container.BindInterfacesTo<CoinAddController>().AsCached().NonLazy();
+        this.Container.BindInterfacesTo<CoinExpandController>().AsCached().NonLazy();
+        this.Container.BindInterfacesTo<CoinCollectController>().AsCached().NonLazy();
     }
 }

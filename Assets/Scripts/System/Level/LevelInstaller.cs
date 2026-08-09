@@ -21,5 +21,7 @@ using Zenject;
             this.Container.Bind<ILevelProgress>().To<LevelProgress>().AsCached();
             this.Container.BindInterfacesTo<GameLoseController>().AsCached();
             this.Container.BindInterfacesTo<GameWinController>().AsCached();
+            this.Container.BindInterfacesTo<LevelUpdateController>().AsCached();
+            this.Container.BindInterfacesTo<DiffiicultyUpdater>().AsCached();
         }
     }

@@ -5,16 +5,22 @@ using UnityEngine;
 using SnakeGame;
 using System.Collections.Generic;
 
-public class CoinSpawner : IDisposable
+public class CoinManager : IDisposable
 {
     private readonly CoinFactory _coinFactory;
 
     private readonly IWorldBounds _worldBounds;
     
     private readonly List<Coin> _spawnedCoins;
+    
+    private readonly CoinExpandController _expandController;
+    
+    private readonly CoinAddController _addController;
+    public event Action OnLevelCompleted;
+    
+    private int _removedCoins;
 
-
-    public CoinSpawner(CoinFactory coinFactory, IWorldBounds worldBounds)
+    public CoinManager(CoinFactory coinFactory, IWorldBounds worldBounds)
     {
         _coinFactory = coinFactory;
         _worldBounds = worldBounds;
@@ -47,6 +53,7 @@ public class CoinSpawner : IDisposable
             if (coin != null)
             {
                 GameObject.Destroy(coin.gameObject);
+                _removedCoins++;
             }
         }
     }
@@ -76,10 +83,25 @@ public class CoinSpawner : IDisposable
 
         return null;
     }
-
-    public bool IsPositionOccupied(Vector2Int position)
+    public bool TryCollectCoin(Vector2Int headPosition)
     {
-        return GetCoinAtPosition(position) != null;
+        Coin coin = GetCoinAtPosition(headPosition);
+        if (coin != null)
+        {
+            OnLevelCompleted?.Invoke();
+            RemoveCoin(coin);
+            return true;
+        }
+
+        return false;
+    }
+    public void LevelSpawn(int coinsNeeded)
+    {
+        ClearAllCoins();
+        for (int i = 0; i < coinsNeeded; i++)
+        {
+            SpawnCoin();
+        }
     }
 
     public void Dispose()
