@@ -14,7 +14,7 @@ namespace System.Coin
             _coinManager.OnLevelCompleted += Add;
         }
 
-        public void Add()
+        private void Add()
         {
             _score.Add(1);
         }

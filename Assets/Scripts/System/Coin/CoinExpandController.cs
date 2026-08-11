@@ -14,7 +14,7 @@ namespace System.Coin
             _coinManager.OnLevelCompleted += Expand;
         }
 
-        public void Expand()
+        private void Expand()
         {
             _snake.Expand(1);
         }

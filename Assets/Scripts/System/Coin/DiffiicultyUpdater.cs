@@ -18,7 +18,7 @@ public class DiffiicultyUpdater : IDisposable
         _coinManager.OnLevelCompleted += OnComplete;
     }
 
-    public void OnComplete()
+    private void OnComplete()
     {
         if (_difficulty.Next(out int newDifficulty))
         {

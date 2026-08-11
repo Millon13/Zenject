@@ -58,7 +58,7 @@ public class CoinManager : IDisposable
     }
 
 
-    public Coin GetCoinAtPosition(Vector2Int position)
+    private Coin GetCoinAtPosition(Vector2Int position)
     {
         foreach (Coin coin in _pool.Coins)
         {
@@ -102,7 +102,7 @@ public class CoinManager : IDisposable
     }
     
 
-    public void NextLevel()
+    private void NextLevel()
     {
         _currentLevel++;
         _coinsNeeded++;
