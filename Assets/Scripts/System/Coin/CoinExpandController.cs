@@ -2,13 +2,12 @@
 
 namespace System.Coin
 {
-    public class CoinExpandController:IDisposable
+    public class CoinExpandController : IDisposable
     {
-        
-        private readonly Snake _snake;
-        private readonly CoinManager _coinManager;
+        private Snake _snake;
+        private CoinManager _coinManager;
 
-        public CoinExpandController(Snake snake,CoinManager coinManager)
+        public CoinExpandController(Snake snake, CoinManager coinManager)
         {
             _snake = snake;
             _coinManager = coinManager;
@@ -17,11 +16,12 @@ namespace System.Coin
 
         public void Expand()
         {
-              _snake.Expand(1);
+            _snake.Expand(1);
         }
+
         public void Dispose()
         {
-            _coinManager.OnLevelCompleted += Expand;
+            _coinManager.OnLevelCompleted -= Expand;
         }
     }
 }

@@ -16,9 +16,10 @@ public sealed class SnakeMovementInstaller : Installer
     public override void InstallBindings()
     {
         this.Container.Bind<ISnake>().To<Snake>().FromInstance(_snake);
-        this.Container.Bind<InputSystem>().FromInstance(inputSystem).AsSingle();
-        this.Container.BindInterfacesTo<SnakeController>().AsCached();
-        this.Container.Bind<Snake>().FromInstance(_snake).AsCached();
+        Container.Bind<InputSystem>().FromInstance(inputSystem).AsSingle();
+        Container.Bind<ITickable>().To<InputSystem>().FromInstance(inputSystem).AsCached();
+        this.Container.BindInterfacesTo<SnakeController>().AsSingle();
+        this.Container.Bind<Snake>().FromInstance(_snake).AsSingle();
         
     }
 }

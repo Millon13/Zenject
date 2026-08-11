@@ -4,13 +4,11 @@ using Modules;
 using Zenject;
 
 
-[CreateAssetMenu(fileName = "NewInputDictionary", menuName = "Input/Input Dictionary")]
+//[CreateAssetMenu(fileName = "NewInputDictionary", menuName = "Input/Input Dictionary")]
 [System.Serializable]
-public class InputSystem : ScriptableObject, ITickable
+public class InputSystem : MonoBehaviour,  ITickable
 {
     public event Action<SnakeDirection> OnTurn;
-
-    private SnakeDirection _currentDirection;
 
     [SerializeField] private KeyCode _up;
 
@@ -19,8 +17,7 @@ public class InputSystem : ScriptableObject, ITickable
     [SerializeField] private KeyCode _left;
 
     [SerializeField] private KeyCode _right;
-
-    private Snake _snake;
+    
 
     public void MoveKeyBoardProvider()
     {
@@ -49,8 +46,7 @@ public class InputSystem : ScriptableObject, ITickable
 
         if (newDirection != SnakeDirection.NONE )
         {
-            OnTurn.Invoke(newDirection);
-            _currentDirection = newDirection;
+            OnTurn?.Invoke(newDirection);
         }
     }
     public void Tick()

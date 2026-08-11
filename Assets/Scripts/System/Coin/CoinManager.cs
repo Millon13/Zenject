@@ -3,31 +3,42 @@ using System.Coin;
 using Modules;
 using UnityEngine;
 using SnakeGame;
-using System.Collections.Generic;
 
 public class CoinManager : IDisposable
 {
     private readonly CoinFactory _coinFactory;
 
     private readonly IWorldBounds _worldBounds;
-    
-    private readonly List<Coin> _spawnedCoins;
-    
+
     private readonly CoinExpandController _expandController;
-    
+
     private readonly CoinAddController _addController;
+
     public event Action OnLevelCompleted;
-    
+
     private int _removedCoins;
 
-    public CoinManager(CoinFactory coinFactory, IWorldBounds worldBounds)
+    private readonly Pool _pool;
+
+    private int _currentLevel = 1;
+
+    private int _coinsCollected = 0;
+
+    private int _coinsNeeded = 1;
+
+    public int CurrentLevel => _currentLevel;
+    public int CoinsNeeded => _coinsNeeded;
+
+    public int CoinsCollected => _coinsCollected;
+    public bool IsLevelComplete => _coinsCollected >= _coinsNeeded;
+
+    public CoinManager(CoinFactory coinFactory, IWorldBounds worldBounds, Pool pool)
     {
         _coinFactory = coinFactory;
         _worldBounds = worldBounds;
-        _spawnedCoins = new List<Coin>();
+        _pool = pool;
+        _coinsNeeded = 1;
     }
-
-    public IReadOnlyList<Coin> SpawnedCoins => _spawnedCoins;
 
     public Coin SpawnCoin()
     {
@@ -42,38 +53,14 @@ public class CoinManager : IDisposable
         );
         newCoin.Position = positionInt;
         newCoin.Generate();
-        _spawnedCoins.Add(newCoin);
+        _pool.AddInPool(newCoin);
         return newCoin;
     }
 
-    public void RemoveCoin(Coin coin)
-    {
-        if (_spawnedCoins.Remove(coin))
-        {
-            if (coin != null)
-            {
-                GameObject.Destroy(coin.gameObject);
-                _removedCoins++;
-            }
-        }
-    }
-
-    public void ClearAllCoins()
-    {
-        foreach (Coin coin in _spawnedCoins)
-        {
-            if (coin != null)
-            {
-                GameObject.Destroy(coin.gameObject);
-            }
-        }
-
-        _spawnedCoins.Clear();
-    }
 
     public Coin GetCoinAtPosition(Vector2Int position)
     {
-        foreach (Coin coin in _spawnedCoins)
+        foreach (Coin coin in _pool.Coins)
         {
             if (coin != null && coin.Position == position)
             {
@@ -83,29 +70,47 @@ public class CoinManager : IDisposable
 
         return null;
     }
+
     public bool TryCollectCoin(Vector2Int headPosition)
     {
         Coin coin = GetCoinAtPosition(headPosition);
         if (coin != null)
         {
-            OnLevelCompleted?.Invoke();
-            RemoveCoin(coin);
+            _pool.RemoveCoin(coin);
+            _coinsCollected++;
+            if (_coinsCollected >= _coinsNeeded)
+            {
+                NextLevel();
+                LevelSpawn(CoinsNeeded);
+                OnLevelCompleted?.Invoke();
+                
+            }
+
             return true;
         }
 
         return false;
     }
+
     public void LevelSpawn(int coinsNeeded)
     {
-        ClearAllCoins();
+        _pool.ClearPool();
         for (int i = 0; i < coinsNeeded; i++)
         {
             SpawnCoin();
         }
     }
+    
+
+    public void NextLevel()
+    {
+        _currentLevel++;
+        _coinsNeeded++;
+        _coinsCollected = 0;
+    }
 
     public void Dispose()
     {
-        ClearAllCoins();
+        _pool.ClearPool();
     }
 }

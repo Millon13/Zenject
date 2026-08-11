@@ -5,7 +5,7 @@ using Modules;
 using Zenject;
 
 [Serializable]
-    public class LevelInstaller:Installer
+    public class GameInstaller:Installer
     {
         [SerializeField] private int _maxDifficulty = 9;
         
@@ -18,10 +18,9 @@ using Zenject;
             this.Container.Bind<IDifficulty>().To<Difficulty>().AsSingle().WithArguments(_maxDifficulty);
             this.Container.Bind<IScore>().To<Score>().AsSingle();
             this.Container.Bind<IWorldBounds>().To<WorldBounds>().FromInstance(_worldBounds).AsCached();
-            this.Container.Bind<ILevelProgress>().To<LevelProgress>().AsCached();
+     
             this.Container.BindInterfacesTo<GameLoseController>().AsCached();
             this.Container.BindInterfacesTo<GameWinController>().AsCached();
-            this.Container.BindInterfacesTo<LevelUpdateController>().AsCached();
-            this.Container.BindInterfacesTo<DiffiicultyUpdater>().AsCached();
+            
         }
     }
