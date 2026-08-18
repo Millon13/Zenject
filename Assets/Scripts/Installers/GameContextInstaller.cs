@@ -1,17 +1,22 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
+using GameCycle;
+using System.Coin;
+using System.Snake;
+using UIGame;
 
 
 public sealed class GameContextInstaller : MonoInstaller
 {
-    [SerializeField] private SnakeMovementInstaller _snakeInstaller;
+    [SerializeField] private SnakeInstaller _snakeInstaller;
 
     [SerializeField] private CoinInstaller coinInstaller;
 
     [SerializeField] private UIInstaller uiInstaller;
-    
-    [FormerlySerializedAs("levelInstaller")] [SerializeField] private GameInstaller gameInstaller;
+
+    [FormerlySerializedAs("levelInstaller")] [SerializeField]
+    private GameInstaller gameInstaller;
 
     public override void InstallBindings()
     {

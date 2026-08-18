@@ -1,59 +1,56 @@
 ﻿using System;
 using SnakeGame;
 using Modules;
-using Unity.VisualScripting;
 using UnityEngine;
-using Zenject;
 
-
-public class GameLoseController : IDisposable
+namespace GameCycle
 {
-    private readonly Snake _snake;
-
-    private GameCycle _gameCycle;
-
-    private IWorldBounds _worldBounds;
-
-    public GameLoseController(Snake snake, GameCycle gameCycle, IWorldBounds worldBounds)
+    public class GameLoseController : IDisposable
     {
-        _snake = snake;
-        _gameCycle = gameCycle;
-        _worldBounds = worldBounds;
-        _snake.OnSelfCollided += Dead;
-        _snake.OnMoved += OnMoved;
-    }
+        private readonly Snake _snake;
 
-    private void OnMoved(Vector2Int obj)
-    {
-       
-        if (IsWorldCollided())
+        private readonly GameCycle _gameCycle;
+
+        private readonly IWorldBounds _worldBounds;
+
+        public GameLoseController(Snake snake, GameCycle gameCycle, IWorldBounds worldBounds)
         {
-            Dead();
-        } 
-    }
-
-
-    public void Dispose()
-    {
-        _snake.OnSelfCollided -= Dead;
-        _snake.OnMoved -= OnMoved;
-        
-    }
-
- 
-
-    public bool IsWorldCollided()
-    {
-        if (!_worldBounds.IsInBounds(_snake.HeadPosition))
-        {
-            return true;
+            _snake = snake;
+            _gameCycle = gameCycle;
+            _worldBounds = worldBounds;
+            _snake.OnSelfCollided += Dead;
+            _snake.OnMoved += OnMoved;
         }
 
-        return false;
-    }
+        private void OnMoved(Vector2Int obj)
+        {
+            if (IsWorldCollided())
+            {
+                Dead();
+            }
+        }
 
-    private void Dead()
-    {
-        _gameCycle.Lose();
+
+        public void Dispose()
+        {
+            _snake.OnSelfCollided -= Dead;
+            _snake.OnMoved -= OnMoved;
+        }
+
+
+        public bool IsWorldCollided()
+        {
+            if (!_worldBounds.IsInBounds(_snake.HeadPosition))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void Dead()
+        {
+            _gameCycle.Lose();
+        }
     }
 }

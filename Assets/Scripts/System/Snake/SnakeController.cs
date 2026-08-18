@@ -1,26 +1,23 @@
-using UnityEngine;
-using Zenject;
-using System;
-using Modules;
-
-public class SnakeController : IDisposable
+namespace System.Snake
 {
-    private readonly Snake _snake;
-
-    private readonly InputSystem _inputSystem;
-
-
-    public SnakeController(Snake snake, InputSystem inputSystem)
+    public class SnakeController : IDisposable
     {
-        _snake = snake;
-        _inputSystem = inputSystem;
-        _inputSystem.OnTurn += _snake.Turn;
-    }
+        private readonly Modules.Snake _snake;
+
+        private readonly InputSystem _inputSystem;
 
 
+        public SnakeController(Modules.Snake snake, InputSystem inputSystem)
+        {
+            _snake = snake;
+            _inputSystem = inputSystem;
+            _inputSystem.OnTurn += _snake.Turn;
+        }
 
-    public void Dispose()
-    {
-        _inputSystem.OnTurn -= _snake.Turn;
+
+        public void Dispose()
+        {
+            _inputSystem.OnTurn -= _snake.Turn;
+        }
     }
 }

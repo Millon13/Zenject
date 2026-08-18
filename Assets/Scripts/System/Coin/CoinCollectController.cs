@@ -1,54 +1,36 @@
 using UnityEngine;
-using Zenject;
-using System.Collections.Generic;
 using Modules;
-using System;
-using System.Coin;
-public class CoinCollectController : ITickable, IDisposable
+
+namespace System.Coin
 {
-    private CoinManager _coinManager;
-
-    private Snake _snake;
-
-    private CoinFactory _coinFactory;
-
-    private IScore _score;
-
-    private IDifficulty _difficulty;
-
-    private Pool _pool;
-
-    private int _currentDifficulty;
-
-    [Inject]
-    public CoinCollectController(Snake snake, CoinManager coinManager, Pool pool)
+    public class CoinCollectController : IDisposable
     {
-        _snake = snake;
-        _snake.OnMoved += this.OnMoved;
-        _coinManager = coinManager;
-        _pool = pool;
-        _coinManager.LevelSpawn(_coinManager.CoinsNeeded);
-    }
+        private CoinManager _coinManager;
 
-    private void OnMoved(Vector2Int obj)
-    {
-        if (_pool.Coins.Count > 0)
+        private Modules.Snake _snake;
+
+        private Pool _pool;
+
+        public CoinCollectController(Modules.Snake snake, CoinManager coinManager, Pool pool)
         {
-            _coinManager.TryCollectCoin(_snake.HeadPosition);
+            _snake = snake;
+            _snake.OnMoved += this.OnMoved;
+            _coinManager = coinManager;
+            _pool = pool;
         }
-    }
 
-    public void Tick()
-    {
-        if (_pool.Coins.Count == 0 && !_coinManager.IsLevelComplete)
+        private void OnMoved(Vector2Int obj)
         {
-            _coinManager.SpawnCoin();
+            if (_pool.NumTotal > 0)
+            {
+                _coinManager.TryCollectCoin(_snake.HeadPosition);
+            }
         }
-    }
 
 
-    public void Dispose()
-    {
-        _snake.OnMoved -= this.OnMoved;
+        public void Dispose()
+        {
+            _snake.OnMoved -= this.OnMoved;
+        }
     }
 }

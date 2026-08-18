@@ -1,6 +1,7 @@
 ﻿using System;
 
-
+namespace GameCycle
+{
     public class GameCycle
     {
         public event Action OnLose;
@@ -16,3 +17,4 @@
             OnLose?.Invoke();
         }
     }
+}

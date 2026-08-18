@@ -1,23 +1,24 @@
-using System;
-using System.Coin;
-using Modules;
 using UnityEngine;
 using Zenject;
 
-[Serializable]
-public class CoinInstaller : Installer
+namespace System.Coin
 {
-    [SerializeField] private Coin coinPrefab;
-
-    public override void InstallBindings()
+    [Serializable]
+    public class CoinInstaller : Installer
     {
-        this.Container.BindFactory<Coin, CoinFactory>().FromComponentInNewPrefab(coinPrefab).AsCached();
-        this.Container.Bind<Pool>().AsCached();
-        this.Container.Bind<CoinManager>().AsCached();
-        this.Container.BindInterfacesTo<CoinCollectController>().AsCached().NonLazy();
-        this.Container.BindInterfacesTo<CoinAddController>().AsCached().NonLazy();
-        this.Container.BindInterfacesTo<CoinExpandController>().AsCached().NonLazy();
-        
-        this.Container.BindInterfacesTo<DiffiicultyUpdater>().AsCached().NonLazy();
+        [SerializeField] private Modules.Coin coinPrefab;
+
+        public override void InstallBindings()
+        {
+            this.Container.BindMemoryPool<Modules.Coin, Pool>()
+                .WithInitialSize(10)
+                .ExpandByOneAtATime()
+                .FromComponentInNewPrefab(coinPrefab);
+            this.Container.Bind<CoinManager>().AsSingle();
+            this.Container.BindInterfacesTo<CoinCollectController>().AsCached().NonLazy();
+            this.Container.BindInterfacesTo<ScoreAddController>().AsCached().NonLazy();
+            this.Container.BindInterfacesTo<DifficultyUpdater>().AsCached().NonLazy();
+            this.Container.Bind<CoinSpawnerController>().AsCached().NonLazy();
+        }
     }
 }

@@ -1,25 +1,32 @@
-﻿using SnakeGame;
+﻿using System;
 using Modules;
-using UnityEngine;
-using Zenject;
 
-public class GameWinController 
+namespace GameCycle
 {
-    private readonly GameCycle _gameCycle;
-
-    private readonly IDifficulty _difficulty;
-
-    public GameWinController(GameCycle gameCycle, IDifficulty difficulty)
+    public class GameWinController : IDisposable
     {
-        _gameCycle = gameCycle;
-        _difficulty = difficulty;
-        _difficulty.OnStateChanged += OnStateChanged;
-    }
+        private readonly GameCycle _gameCycle;
 
-    private void OnStateChanged()
-    {
-        if (_difficulty.Current == _difficulty.Max)
-                    _gameCycle.Win();
+        private readonly IDifficulty _difficulty;
+
+        public GameWinController(GameCycle gameCycle, IDifficulty difficulty)
+        {
+            _gameCycle = gameCycle;
+            _difficulty = difficulty;
+            _difficulty.OnStateChanged += OnStateChanged;
+        }
+
+        private void OnStateChanged()
+        {
+            if (_difficulty.Current > _difficulty.Max)
+            {
+                _gameCycle.Win();
+            }
+        }
+
+        public void Dispose()
+        {
+            _difficulty.OnStateChanged -= OnStateChanged;
+        }
     }
-   
 }

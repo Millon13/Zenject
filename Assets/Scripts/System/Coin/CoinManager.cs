@@ -1,116 +1,88 @@
-﻿using System;
-using System.Coin;
-using Modules;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using SnakeGame;
 
-public class CoinManager : IDisposable
+namespace System.Coin
 {
-    private readonly CoinFactory _coinFactory;
-
-    private readonly IWorldBounds _worldBounds;
-
-    private readonly CoinExpandController _expandController;
-
-    private readonly CoinAddController _addController;
-
-    public event Action OnLevelCompleted;
-
-    private int _removedCoins;
-
-    private readonly Pool _pool;
-
-    private int _currentLevel = 1;
-
-    private int _coinsCollected = 0;
-
-    private int _coinsNeeded = 1;
-
-    public int CurrentLevel => _currentLevel;
-    public int CoinsNeeded => _coinsNeeded;
-
-    public int CoinsCollected => _coinsCollected;
-    public bool IsLevelComplete => _coinsCollected >= _coinsNeeded;
-
-    public CoinManager(CoinFactory coinFactory, IWorldBounds worldBounds, Pool pool)
+    public class CoinManager
     {
-        _coinFactory = coinFactory;
-        _worldBounds = worldBounds;
-        _pool = pool;
-        _coinsNeeded = 1;
-    }
+        private readonly IWorldBounds _worldBounds;
+        public event Action OnLevelCompleted;
+        public event Action OnCollectedCoin;
+        
+        private List<Modules.Coin> _remainingCoins;
+        
+        private readonly Pool _pool;
 
-    public Coin SpawnCoin()
-    {
-        if (_worldBounds == null) return null;
+        private int _coinsNeeded;
 
-        Vector2 spawnPosition = _worldBounds.GetRandomPosition();
-        Coin newCoin = _coinFactory.Create();
-
-        Vector2Int positionInt = new Vector2Int(
-            Mathf.RoundToInt(spawnPosition.x),
-            Mathf.RoundToInt(spawnPosition.y)
-        );
-        newCoin.Position = positionInt;
-        newCoin.Generate();
-        _pool.AddInPool(newCoin);
-        return newCoin;
-    }
-
-
-    private Coin GetCoinAtPosition(Vector2Int position)
-    {
-        foreach (Coin coin in _pool.Coins)
+        public CoinManager(IWorldBounds worldBounds, Pool pool)
         {
-            if (coin != null && coin.Position == position)
-            {
-                return coin;
-            }
+            _worldBounds = worldBounds;
+            _pool = pool;
+            _coinsNeeded = 1;
+            _remainingCoins = new List<Modules.Coin>();
+            LevelSpawn(_coinsNeeded);
         }
 
-        return null;
-    }
-
-    public bool TryCollectCoin(Vector2Int headPosition)
-    {
-        Coin coin = GetCoinAtPosition(headPosition);
-        if (coin != null)
+        public Modules.Coin SpawnCoin()
         {
-            _pool.RemoveCoin(coin);
-            _coinsCollected++;
-            if (_coinsCollected >= _coinsNeeded)
+            if (_worldBounds == null) return null;
+
+            Vector2 spawnPosition = _worldBounds.GetRandomPosition();
+            Modules.Coin newCoin = _pool.Spawn();
+            _remainingCoins.Add(newCoin);
+
+            Vector2Int positionInt = new Vector2Int(
+                Mathf.RoundToInt(spawnPosition.x),
+                Mathf.RoundToInt(spawnPosition.y)
+            );
+            newCoin.Position = positionInt;
+            newCoin.Generate();
+            return newCoin;
+        }
+
+
+        private Modules.Coin GetCoinAtPosition(Vector2Int position)
+        {
+            foreach (Modules.Coin coin in _remainingCoins)
             {
-                NextLevel();
-                LevelSpawn(CoinsNeeded);
-                OnLevelCompleted?.Invoke();
-                
+                if (coin != null && coin.Position == position)
+                {
+                    return coin;
+                }
             }
 
-            return true;
+            return null;
         }
 
-        return false;
-    }
-
-    public void LevelSpawn(int coinsNeeded)
-    {
-        _pool.ClearPool();
-        for (int i = 0; i < coinsNeeded; i++)
+        public bool TryCollectCoin(Vector2Int headPosition)
         {
-            SpawnCoin();
+            Modules.Coin coin = GetCoinAtPosition(headPosition);
+            if (coin != null)
+            {
+                _pool.Despawn(coin);
+                _remainingCoins.Remove(coin);
+                OnCollectedCoin?.Invoke();
+                if (_remainingCoins.Count == 0)
+                {
+                    _coinsNeeded++;
+                    LevelSpawn(_coinsNeeded);
+                    OnLevelCompleted?.Invoke();
+                }
+
+                return true;
+            }
+
+            return false;
         }
-    }
-    
 
-    private void NextLevel()
-    {
-        _currentLevel++;
-        _coinsNeeded++;
-        _coinsCollected = 0;
-    }
-
-    public void Dispose()
-    {
-        _pool.ClearPool();
+        public void LevelSpawn(int coinsNeeded)
+        {
+            for (int i = 0; i < coinsNeeded; i++)
+            {
+                SpawnCoin();
+            }
+        }
     }
 }
